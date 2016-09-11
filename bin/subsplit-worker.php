@@ -10,7 +10,7 @@ $config = json_decode(file_get_contents($configFilename), true);
 
 $start = time();
 
-$redis = new Predis\Client(array('read_write_timeout' => 0,));
+$redis = new Predis\Client(array('read_write_timeout' => -1,));
 while ($body = $redis->brpoplpush('dflydev-git-subsplit:incoming', 'dflydev-git-subsplit:processing', 0)) {
     $data = json_decode($body, true);
     $name = null;
@@ -80,6 +80,7 @@ while ($body = $redis->brpoplpush('dflydev-git-subsplit:incoming', 'dflydev-git-
         implode(' ', $publishCommand)
     ));
 
+    echo $command;
     passthru($command, $exitCode);
 
     if (0 !== $exitCode) {

@@ -8,10 +8,8 @@ $configFilename = file_exists(__DIR__.'/../config.json')
 
 $config = json_decode(file_get_contents($configFilename), true);
 
-$body = $_POST['payload'];
-
 $redis = new Predis\Client();
 
-$redis->lpush('dflydev-git-subsplit:incoming', $body);
+$redis->lpush('dflydev-git-subsplit:incoming', file_get_contents('php://input'));
 
 echo "Thanks.\n";
