@@ -46,13 +46,15 @@ while ($body = $redis->brpoplpush('dflydev-git-subsplit:incoming', 'dflydev-git-
         escapeshellarg(implode(' ', $project['splits'])),
     );
 
-    if (preg_match('/refs\/tags\/(.+)$/', $ref, $matches)) {
-        $publishCommand[] = escapeshellarg('--rebuild-tags');
-        $publishCommand[] = escapeshellarg('--no-heads');
-        $publishCommand[] = escapeshellarg(sprintf('--tags=%s', $matches[1]));
-    } elseif (preg_match('/refs\/heads\/(.+)$/', $ref, $matches)) {
+    $baseRef = $data['base_ref'];
+
+    if (preg_match('/refs\/tags\/(.+)$/', $ref, $matches) && $baseRef !== null) {
+        if (preg_match('/refs\/heads\/(.+)$/', $baseRef, $heads)) {
+            $publishCommand[] = escapeshellarg(sprintf('--heads=%s', $heads[1]));
+        }
+    } elseif (preg_match('/refs\/heads\/(.+)$/', $ref, $heads)) {
         $publishCommand[] = escapeshellarg('--no-tags');
-        $publishCommand[] = escapeshellarg(sprintf('--heads=%s', $matches[1]));
+        $publishCommand[] = escapeshellarg(sprintf('--heads=%s', $heads[1]));
     } else {
         print sprintf('Skipping request for URL %s (unexpected reference detected: %s)', $data['repository']['url'], $ref)."\n";
 
