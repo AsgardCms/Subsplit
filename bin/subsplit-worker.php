@@ -10,8 +10,13 @@ $config = json_decode(file_get_contents($configFilename), true);
 
 $start = time();
 
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
+
 $redis = new Predis\Client(array('read_write_timeout' => -1,));
 while ($body = $redis->brpoplpush('dflydev-git-subsplit:incoming', 'dflydev-git-subsplit:processing', 0)) {
+    $splitStart = time();
+    exec('curl -X POST --data-urlencode \'payload={"channel": "#asgardcmscom", "username": "buildbot", "text": "Started: splitting modules.", "icon_emoji": ":ghost:"}\' ' . getenv('SLACK_URL'));
     $data = json_decode($body, true);
     $name = null;
     $project = null;
@@ -97,6 +102,9 @@ while ($body = $redis->brpoplpush('dflydev-git-subsplit:incoming', 'dflydev-git-
 
     $redis->lrem('dflydev-git-subsplit:processing', 1, $body);
     $redis->rpush('dflydev-git-subsplit:processed', json_encode($data));
+
+    $splitSeconds = time() - $splitStart;
+    exec('curl -X POST --data-urlencode \'payload={"channel": "#asgardcmscom", "username": "buildbot", "text": "Finished: splitting modules. It took: '.$splitSeconds.' seconds.", "icon_emoji": ":ghost:"}\' ' . getenv('SLACK_URL'));
 }
 
 $seconds = time() - $start;
