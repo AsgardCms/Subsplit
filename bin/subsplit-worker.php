@@ -10,7 +10,7 @@ $config = json_decode(file_get_contents($configFilename), true);
 
 $start = time();
 
-$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv = new Dotenv\Dotenv(__DIR__ . '/..');
 $dotenv->load();
 
 $redis = new Predis\Client(array('read_write_timeout' => -1,));
