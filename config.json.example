@@ -1,0 +1,29 @@
+{
+  "working-directory":"/tmp/subsplit",
+  "url":"https://github.com/GoAsgard/Platform",
+  "splits":[
+    "Modules/Core:git@github.com:GoAsgard/Core.git",
+    "Modules/Dashboard:git@github.com:GoAsgard/Dashboard.git",
+    "Modules/User:git@github.com:GoAsgard/User.git",
+    "Modules/Setting:git@github.com:GoAsgard/Setting.git",
+    "Modules/Media:git@github.com:GoAsgard/Media.git",
+    "Modules/Page:git@github.com:GoAsgard/Page.git",
+    "Modules/Menu:git@github.com:GoAsgard/Menu.git",
+    "Modules/Workshop:git@github.com:GoAsgard/Workshop.git",
+    "Modules/Translation:git@github.com:GoAsgard/Translation.git",
+    "Modules/Tag:git@github.com:GoAsgard/Tag.git",
+    "Themes/Adminlte:git@github.com:GoAsgard/AdminLTE.git",
+    "Themes/Flatly:git@github.com:GoAsgard/Flatly.git"
+  ],
+  "slack_url": "SLACK_HOOK_URL",
+  "redis": {
+    "host": "localhost:6379",
+    "password": "",
+    "db": 0,
+    "prefix": "splitter:"
+  },
+  "http": {
+    "port": 8008,
+    "route": "/incoming"
+  }
+}
